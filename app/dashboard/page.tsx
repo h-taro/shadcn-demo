@@ -22,7 +22,7 @@ export default function Page() {
               <div className="px-4 lg:px-6">
                 <ChartAreaInteractive />
               </div>
-              <div className="sticky top-0">
+              <div className="">
                 <DataTable data={data} />
               </div>
             </div>
