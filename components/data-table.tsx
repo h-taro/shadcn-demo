@@ -168,3 +168,107 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     },
   },
 ];
+
+const chartData = [
+  { month: "January", desktop: 186, mobile: 80 },
+  { month: "February", desktop: 305, mobile: 200 },
+  { month: "March", desktop: 237, mobile: 120 },
+  { month: "April", desktop: 73, mobile: 190 },
+  { month: "May", desktop: 209, mobile: 130 },
+  { month: "June", desktop: 214, mobile: 140 },
+];
+
+const chartConfig = {
+  desktop: {
+    label: "Desktop",
+    color: "var(--primary)",
+  },
+  mobile: {
+    label: "Mobile",
+    color: "var(--primary)",
+  },
+} satisfies ChartConfig;
+
+function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
+  const isMobile = useIsMobile();
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
+          variant={"link"}
+          className="w-fit px-0 text-left text-foreground hover:underline"
+        >
+          {item.header}
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="flex flex-col">
+        <SheetHeader className="gap-1">
+          <SheetTitle>{item.header}</SheetTitle>
+          <SheetDescription>
+            Showing total visitors for the last 6 months
+          </SheetDescription>
+        </SheetHeader>
+        <div className="flex flex-1 flex-col gap-4 overflow-y-auto py-4 text-sm">
+          {!isMobile && (
+            <>
+              <ChartContainer config={chartConfig}>
+                <AreaChart
+                  accessibilityLayer
+                  data={chartData}
+                  margin={{
+                    left: 0,
+                    right: 10,
+                  }}
+                >
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey={"month"}
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    tickFormatter={(value) => value.slice(0, 3)}
+                    hide
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent indicator="dot" />}
+                  />
+                  <Area
+                    dataKey={"mobile"}
+                    type={"natural"}
+                    fill="var(--color-mobile"
+                    fillOpacity={0.6}
+                    stroke="var(--color-mobile)"
+                    stackId={"a"}
+                  />
+                  <Area
+                    dataKey={"desktop"}
+                    type={"natural"}
+                    fill="var(--color-desktop)"
+                    fillOpacity={0.4}
+                    stroke="var(--color-desktop)"
+                    stackId={"a"}
+                  />
+                </AreaChart>
+              </ChartContainer>
+              <Separator />
+              <div className="grid gap-2">
+                <div className="flex gap-2 font-medium leading-none">
+                  rending up by 5.2% this month{" "}
+                  <TrendingUpIcon className="size-4" />
+                </div>
+                <div className="text-muted-foreground">
+                  Showing total visitors for the last 6 months. This is just
+                  some random text to test the layout. It spans multiple lines
+                  and should wrap around.
+                </div>
+              </div>
+              <Separator />
+            </>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
