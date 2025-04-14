@@ -9,7 +9,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import {
+  MoreHorizontal,
+  ChevronUp,
+  ChevronDown,
+  ArrowUpDown,
+} from "lucide-react";
 
 export type Payment = {
   id: string;
@@ -25,7 +30,29 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: ({ column }) => {
+      let SortIcon;
+      switch (column.getIsSorted()) {
+        case "asc":
+          SortIcon = ChevronUp;
+          break;
+        case "desc":
+          SortIcon = ChevronDown;
+          break;
+        default:
+          SortIcon = ArrowUpDown;
+      }
+
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Email
+          <SortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "amount",
