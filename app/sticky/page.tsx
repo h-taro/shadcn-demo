@@ -1,6 +1,6 @@
 import AmazonSalesTable from "@/components/amazon-sales-table";
 
-export default function Page() {
+export default async function Page() {
   return (
     <main className="container mx-auto py-10 px-4">
       <div className="mb-8 text-center">
@@ -11,6 +11,7 @@ export default function Page() {
           Track your Amazon sales performance and profitability
         </p>
       </div>
+
       <AmazonSalesTable />
     </main>
   );

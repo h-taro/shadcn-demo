@@ -24,11 +24,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { generateSalesData } from "@/lib/generate-data";
 import type { SalesData } from "@/lib/types";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
 
 export default function AmazonSalesTable() {
   const data = React.useMemo(() => generateSalesData(50), []);
   const tableContainerRef = React.useRef<HTMLDivElement>(null);
-  const tableRef = React.useRef<HTMLTableElement>(null);
   const [isHeaderFixed, setIsHeaderFixed] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -165,15 +172,15 @@ export default function AmazonSalesTable() {
             }}
           >
             <div className="rounded-t-md border border-zinc-700 bg-zinc-900 overflow-hidden">
-              <table className="w-full table-fixed">
-                <thead className="bg-zinc-900">
+              <Table className="w-full table-fixed">
+                <TableHeader className="bg-zinc-900">
                   {table.getHeaderGroups().map((headerGroup) => (
-                    <tr
+                    <TableRow
                       key={headerGroup.id}
                       className="border-b border-zinc-800"
                     >
                       {headerGroup.headers.map((header, index) => (
-                        <th
+                        <TableHead
                           key={header.id}
                           className={`bg-zinc-900 text-zinc-300 py-4 font-medium h-12 px-4 text-left align-middle border-r border-zinc-800 ${
                             index === headerGroup.headers.length - 1
@@ -193,24 +200,27 @@ export default function AmazonSalesTable() {
                                 header.column.columnDef.header,
                                 header.getContext()
                               )}
-                        </th>
+                        </TableHead>
                       ))}
-                    </tr>
+                    </TableRow>
                   ))}
-                </thead>
-              </table>
+                </TableHeader>
+              </Table>
             </div>
           </div>
         )}
 
         {/* メインテーブル */}
         <div className="overflow-x-auto">
-          <table ref={tableRef} className="w-full table-fixed">
-            <thead className="bg-zinc-900 shadow-sm">
+          <Table className="w-full table-fixed">
+            <TableHeader className="bg-zinc-900 shadow-sm">
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="border-b border-zinc-800">
+                <TableRow
+                  key={headerGroup.id}
+                  className="border-b border-zinc-800"
+                >
                   {headerGroup.headers.map((header, index) => (
-                    <th
+                    <TableHead
                       key={header.id}
                       className={`bg-zinc-900 text-zinc-300 py-4 font-medium h-12 px-4 text-left align-middle border-r border-zinc-800 ${
                         index === headerGroup.headers.length - 1
@@ -224,20 +234,20 @@ export default function AmazonSalesTable() {
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                    </th>
+                    </TableHead>
                   ))}
-                </tr>
+                </TableRow>
               ))}
-            </thead>
-            <tbody>
+            </TableHeader>
+            <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <tr
+                  <TableRow
                     key={row.id}
                     className="border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors"
                   >
                     {row.getVisibleCells().map((cell, index) => (
-                      <td
+                      <TableCell
                         key={cell.id}
                         className={`p-4 align-middle text-zinc-200 border-r border-zinc-800 ${
                           index === row.getVisibleCells().length - 1
@@ -249,22 +259,22 @@ export default function AmazonSalesTable() {
                           cell.column.columnDef.cell,
                           cell.getContext()
                         )}
-                      </td>
+                      </TableCell>
                     ))}
-                  </tr>
+                  </TableRow>
                 ))
               ) : (
-                <tr>
-                  <td
+                <TableRow>
+                  <TableCell
                     colSpan={columns.length}
                     className="h-24 text-center text-zinc-400"
                   >
                     No results.
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
         <div className="flex items-center justify-end p-4 border-t border-zinc-800 bg-zinc-900">
           <div className="text-sm text-zinc-400">
