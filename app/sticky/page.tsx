@@ -1,4 +1,4 @@
-import AmazonSalesTable from "@/components/amazon-sales-table";
+import StickyDataTable from "@/components/sticky-data-table";
 
 export default async function Page() {
   return (
@@ -11,8 +11,7 @@ export default async function Page() {
           Track your Amazon sales performance and profitability
         </p>
       </div>
-
-      <AmazonSalesTable />
+      <StickyDataTable />
     </main>
   );
 }
