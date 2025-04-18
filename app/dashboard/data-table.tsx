@@ -12,9 +12,9 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { payments } from "./data";
+import { Payment } from "./columns";
 import { Input } from "@/components/ui/input";
-import { generateSalesData } from "@/lib/generate-data";
-import type { SalesData } from "@/lib/types";
 import {
   Table,
   TableBody,
@@ -22,10 +22,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
+} from "@/components/ui/table";
 
-export default function StickyDataTable() {
-  const data = React.useMemo(() => generateSalesData(50), []);
+export default function DataTable() {
   const tableContainerRef = React.useRef<HTMLDivElement>(null);
   const [isHeaderFixed, setIsHeaderFixed] = React.useState<boolean>(false);
 
@@ -42,6 +41,7 @@ export default function StickyDataTable() {
     };
 
     const handleResize = () => {
+      // リサイズ時に固定ヘッダーの位置を更新
       if (isHeaderFixed) {
         setIsHeaderFixed(false);
         setTimeout(() => setIsHeaderFixed(true), 0);
@@ -57,12 +57,12 @@ export default function StickyDataTable() {
     };
   }, [isHeaderFixed]);
 
-  const columns: ColumnDef<SalesData>[] = [
+  const columns: ColumnDef<Payment>[] = [
     {
-      accessorKey: "productId",
-      header: "Product ID",
+      accessorKey: "id",
+      header: "ID",
       cell: ({ row }) => (
-        <div className="font-mono text-xs">{row.getValue("productId")}</div>
+        <div className="font-mono text-xs">{row.getValue("id")}</div>
       ),
     },
   ];
@@ -75,8 +75,8 @@ export default function StickyDataTable() {
     React.useState<VisibilityState>({});
 
   const table = useReactTable({
-    data,
-    columns,
+    data: payments,
+    columns: columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -91,15 +91,12 @@ export default function StickyDataTable() {
   });
 
   return (
-    <div className="w-full p-6 bg-zinc-900 rounded-lg shadow-xl">
+    <div className="w-full">
       <div className="flex items-center justify-between py-4">
         <Input placeholder="Filter products..." />
       </div>
 
-      <div
-        ref={tableContainerRef}
-        className="relative rounded-md border border-zinc-700 bg-zinc-900 shadow-md"
-      >
+      <div ref={tableContainerRef} className="relative">
         {isHeaderFixed && (
           <div
             className="fixed top-0 z-50 shadow-md"
@@ -108,19 +105,13 @@ export default function StickyDataTable() {
               left: tableContainerRef.current?.getBoundingClientRect().left,
             }}
           >
-            <div className="rounded-t-md border border-zinc-700 bg-zinc-900 overflow-hidden">
-              <Table className="w-full table-fixed">
-                <TableHeader className="bg-zinc-900">
+            <div className="overflow-hidden">
+              <Table>
+                <TableHeader className="bg-white">
                   {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow
-                      key={headerGroup.id}
-                      className="border-b border-zinc-800"
-                    >
+                    <TableRow key={headerGroup.id} className="">
                       {headerGroup.headers.map((header) => (
-                        <TableHead
-                          key={header.id}
-                          className={`bg-zinc-900 text-zinc-300 py-4 font-medium h-12 px-4 text-left align-middle border-r border-zinc-800`}
-                        >
+                        <TableHead key={header.id}>
                           {header.isPlaceholder
                             ? null
                             : flexRender(
@@ -137,19 +128,13 @@ export default function StickyDataTable() {
           </div>
         )}
 
-        <div className="overflow-x-auto">
-          <Table className="w-full table-fixed">
-            <TableHeader className="bg-zinc-900 shadow-sm">
+        <div className="">
+          <Table>
+            <TableHeader className="bg-white">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow
-                  key={headerGroup.id}
-                  className="border-b border-zinc-800"
-                >
+                <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead
-                      key={header.id}
-                      className={`bg-zinc-900 text-zinc-300 py-4 font-medium h-12 px-4 text-left align-middle border-r border-zinc-800`}
-                    >
+                    <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -162,17 +147,11 @@ export default function StickyDataTable() {
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows.length ? (
+              {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    className="border-r border-zinc-800 hover:bg-zinc-800/50 transition-colors"
-                  >
+                  <TableRow key={row.id}>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className={`p-4 align-middle text-zinc-200 border-r border-zinc-800`}
-                      >
+                      <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -193,13 +172,6 @@ export default function StickyDataTable() {
               )}
             </TableBody>
           </Table>
-        </div>
-
-        <div className="flex items-center justify-end p-4 border-t border-zinc-800 bg-zinc-900">
-          <div className="text-sm text-zinc-400">
-            Showing {table.getFilteredRowModel().rows.length} of {data.length}{" "}
-            rows
-          </div>
         </div>
       </div>
     </div>
